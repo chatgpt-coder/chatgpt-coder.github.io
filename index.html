@@ -1,1 +1,280 @@
-Hello World
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="Prompting ChatGPT for Multimodal Reasoning and Action">
+  <meta name="keywords" content="MM-ReAct, ChatGPT, GPT-4">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chat2Fix: Automatic Vulnerability Repair with ChatGPT</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="icon" href="./static/images/icon.png">
+  <link rel="stylesheet" href="./static/css/index.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+
+  <style>
+		/* Define the grid layout */
+		.mygrid {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			grid-gap: 20px;
+			width: 80%;
+			margin: auto;
+		}
+		.grid_item {
+      background: #FFFFFF;
+      opacity: 1;
+    }
+
+		/* Define the size of the GIFs */
+		.mygif {
+			height: auto;
+			cursor: pointer;
+		}
+		
+		/* Define the modal styles */
+		.modal {
+			display: none;
+			position: fixed;
+			z-index: 1;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			overflow: auto;
+			background-color: rgba(0,0,0,0.9);
+		}
+		
+		.modal-content {
+			margin: auto;
+			display: block;
+			width: 80%;
+			max-width: 800px;
+			max-height: 80%;
+		}
+
+    /* Define the full-screen overlay styles */
+		.overlay {
+			position: fixed;
+			z-index: 999;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+			background-color: rgba(0,0,0,0.9);
+			display: none;
+		}
+		
+		.overlay img {
+			width: auto;
+			height: 90%;
+			margin: 0 auto;
+			display: block;
+			max-width: 90%;
+			max-height: 90%;
+		}
+
+    /* Define the video styles */
+		.gifvideo {
+			width: 100%;
+			height: auto;
+		}
+
+		/* Define the progress bar styles */
+		.progress {
+			width: 100%;
+			height: 10px;
+			background-color: #ddd;
+			position: relative;
+		}
+
+		.progress-bar {
+			height: 100%;
+			background-color: #4CAF50;
+			position: absolute;
+			top: 0;
+			left: 0;
+		}
+		
+		/* Define the close button style */
+		.close {
+			color: white;
+			position: absolute;
+			top: 10px;
+			right: 25px;
+			font-size: 35px;
+			font-weight: bold;
+			cursor: pointer;
+		}
+		
+		.close:hover,
+		.close:focus {
+			color: #bbb;
+			text-decoration: none;
+			cursor: pointer;
+		}
+        .center {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+		img {
+			max-width: 100%;
+			max-height: 100%;
+		}
+	</style>
+  </head>
+  <body>
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h2 class="title is-2 publication-title" style="width: 100%">Towards Automatic Vulnerability Repair: </h2>
+          <h2 class="title is-2 publication-title" style="width: 100%">Static Analysis Meets ChatGPT </h2>
+
+          <!-- <div class="column has-text-centered">
+            <div class="publication-links">
+
+              <span class="link-block">
+                <a href="" 
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+
+              <span class="link-block">
+                <a href="" target="_blank" 
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+
+              <span class="link-block">
+                <a href="" target="_blank" 
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="far fa-images"></i>
+                  </span>
+                  <span>Live Demo</span>
+                  </a>
+            </div>
+
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <div class="center">
+        <img id="teaser" width="80%" src="images/example.png">
+      </div>
+      <h2 class="subtitle has-text-centered">
+        Chat2Fix integrates static program analysis (e.g., CodeQL) and large language model (ChatGPT) to automatically identify and repair vulnerabilities in code.
+      </h2>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Security vulnerabilities in production code can seriously compromise software security, but fixing vulnerable code is often difficult and requires significant expertise. 
+            On the other hand, ChatGPT, as a large language model, offers promising potential for code generation and understanding. However, it is still unclear how and to what extent ChatGPT can help repair code vulnerability. 
+            In this paper, we first did an analysis to understand ChatGPT's capability for vulnerability repair by studying 54 code examples (18 top CWE vulnerabilities and 12 public CVEs on OpenSSL).
+            Based on our analysis, we identify that involving vulnerability information in the prompt significantly improves the accuracy of code repair.
+            Therefore, we propose a novel framework for automatic code repair called Chat2Fix. By utilizing static analysis techniques, our framework automatically identifies and summarizes potential vulnerabilities in code. This information is then intelligently merged into prompts for ChatGPT, resulting in a more informed and efficient vulnerability repair process. Our results show that Chat2Fix is able to automatically resolve 50 out of 54 instances of vulnerable code, which represents a 47% improvement over relying solely on naive ChatGPT queries.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+    <br>
+    <br>
+    <!-- Paper Model. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-six-fifths">
+        <h2 class="title is-3">Chat2Fix Design</h2>
+        <div class="content has-text-justified">
+          <p>
+            <b>Chat2Fix is a framework for automatic vulnerability repair without the need of experts' knowledge.</b>
+          </p>
+          <ul>
+            <li><b>Vulnerability identification.</b> Chat2Fix leverages a static analysis tool (e.g., CodeQL) to identify potential vulnerabilities in code and produce a textual summary.  </li>
+            <li><b>Generation of diverse prompt templates.</b> Given a predefined simple prompt template, Chat2Fix further uses ChatGPT or other large language models to generate more prompt templates semantically similar to the predefined one. </li>
+            <li><b>Generation of prompts.</b> For each prompt template, ChatFix fills in the source code and cleans the text. The prompt is ready for querying ChatGPT for repair solutions.</li>
+            <li><b>Interactive queries.</b> For each prompt, Chat2Fix use it to query ChatGPT and receives the fixed code. The static analysis tool for the second time tries to detect vulnerabilities in the fixed code. If the vulnerability still exists, Chat2Fix summarize the vulnerability report, append it to the original prompt as feedback, and ask ChatGPT to provide another solution.</li>
+          </ul>
+        </div>
+        <div class="center">
+            <img id="model" width="100%" src="images/overview.png">
+        </div>
+        <p class="has-text-centered">
+          Overview of Chat2Fix.
+        </p> 
+      </div>
+    </div>
+    <br>
+    <br>
+    <!-- Paper Model. -->
+
+    <!-- Demo -->
+    <div class="columns is-centered has-text-centered">
+        <div class="column is-six-fifths">
+          <h2 class="title is-3">Chat2Fix Demo</h2>
+          <div class="content has-text-justified">
+          </div>
+        </div>
+      </div>
+      <br>
+      <br>
+    <!-- Demo -->
+
+</body>
+</html>
