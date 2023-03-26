@@ -2,14 +2,13 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <meta name="description"
-        content="Prompting ChatGPT for Multimodal Reasoning and Action">
-  <meta name="keywords" content="MM-ReAct, ChatGPT, GPT-4">
+  <meta name="keywords" content="Chat2Fix, ChatGPT, GPT-4, CodeQL">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Chat2Fix: Automatic Vulnerability Repair with ChatGPT</title>
 
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
 
@@ -20,6 +19,62 @@
     gtag('js', new Date());
 
     gtag('config', 'G-PYVRSFMDRL');
+  </script>
+  <script>
+    $(document).ready(function() {
+      cases = {
+        "sql_injection": {
+          "example1": {}
+        }
+      }
+
+      dispaly_names = {
+        "sql_injection": "SQL Injection",
+        "example1": "Example 1",
+      }
+
+      for (const [vuln, examples] of Object.entries(cases)) {
+        $("#vulnerability-type").append("<option value='" + vuln + "'>" + dispaly_names[vuln] + "</option>");
+        for (const [example, value] of Object.entries(examples)) {
+          $("#example-id").append("<option value='" + example + "'>" + dispaly_names[example] + "</option>");
+        }
+      }
+
+      function loadExample() {
+          const vulnerabilityType = $("#vulnerability-type").val();
+          const exampleId = $("#example-id").val();
+
+          fetch("data/" + vulnerabilityType + "/" + exampleId + '/code.txt')
+            .then(response => response.text())
+            .then(data => {
+              $("#code code").text(data);
+          });
+
+          fetch("data/" + vulnerabilityType + "/" + exampleId + '/codeql.txt')
+            .then(response => response.text())
+            .then(data => {
+              $("#codeql code").text(data);
+          });
+
+          fetch("data/" + vulnerabilityType + "/" + exampleId + '/prompt.txt')
+            .then(response => response.text())
+            .then(data => {
+              $("#prompt code").text(data);
+          });
+
+          fetch("data/" + vulnerabilityType + "/" + exampleId + '/repair.txt')
+            .then(response => response.text())
+            .then(data => {
+              $("#repair code").text(data);
+          });
+      }
+
+      // Listen for changes in the select menus
+      $("#vulnerability-type, #example-id").on("change", loadExample);
+
+      // Call loadExample on page load
+      loadExample();
+    });
   </script>
 
   <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
@@ -142,7 +197,7 @@
 			text-decoration: none;
 			cursor: pointer;
 		}
-        .center {
+    .center {
 			display: flex;
 			justify-content: center;
 			align-items: center;
@@ -151,10 +206,75 @@
 			max-width: 100%;
 			max-height: 100%;
 		}
-	</style>
-  </head>
-  <body>
 
+    .demo-select {
+      width: 40%;
+      margin: 0 auto;
+    }
+
+    select {
+      background-color: #f7f7f7;
+      border-radius: 3px;
+      padding: 10px;
+      font-size: 16px;
+      font-family: 'Arial', sans-serif;
+      color: #555;
+      cursor: pointer;
+    }
+
+    /* Style the arrow icon */
+    select::-ms-expand {
+      display: none;
+    }
+
+    select::after {
+      content: "\25BC";
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      color: #555;
+    }
+
+    /* Style the options */
+    option {
+      background-color: #f7f7f7;
+      color: #555;
+      font-size: 16px;
+      font-family: 'Arial', sans-serif;
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    option:hover,
+    option:focus {
+      background-color: #ddd;
+      color: #222;
+    }
+
+    .demo-code {
+      max-width: 1000px;
+      max-height: 600px;
+      background-color: #f7f7f7;
+      border: 1px solid #ccc;
+      padding: 0px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .demo-code code {
+      max-width: 100%;
+      max-height: 100%;
+      display: block;
+      margin: 0;
+      padding: 10px;
+      overflow: auto;
+    }
+
+  </style>
+</head>
+<body>
 
 <section class="hero">
   <div class="hero-body">
@@ -265,16 +385,41 @@
     <!-- Paper Model. -->
 
     <!-- Demo -->
-    <div class="columns is-centered has-text-centered">
-        <div class="column is-six-fifths">
-          <h2 class="title is-3">Chat2Fix Demo</h2>
-          <div class="content has-text-justified">
+    <div class="columns is-centered">
+      <div class="column is-six-fifths">
+        <h2 class="title is-3 is-centered has-text-centered">Chat2Fix Demo</h2>
+        <div class="center">
+          <div class="demo-select">
+            <label>Vulnerability Type: </label>
+            <select id="vulnerability-type">
+            </select>
+          </div>
+          <div class="demo-select">
+            <label>Example ID: </label>
+            <select id="example-id">
+            </select>
           </div>
         </div>
+        <br>
+        <p>Original source code</p>
+        <pre id="code" class="demo-code"><code></code></pre>
+        <br>
+        <p>Vulnerabilities detected by CodeQL</p>
+        <pre id="codeql" class="demo-code"><code></code></pre>
+        <br>
+        <p>A prompt crafted by Chat2Fix</p>
+        <pre id="prompt" class="demo-code"><code></code></pre>
+        <br>
+        <p>Repaired code returned by ChatGPT</p>
+        <pre id="repair" class="demo-code"><code></code></pre>
       </div>
-      <br>
-      <br>
+    </div>
+    <br>
+    <br>
     <!-- Demo -->
+	
+  </div>
+</section>
 
 </body>
 </html>

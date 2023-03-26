@@ -1,0 +1,6 @@
+{
+   "vulnerability": "py/reflective-xss",
+   "message": "Cross-site scripting vulnerability due to a [user-provided value](1).",
+   "locations": [...]
+ }
+
