@@ -1,0 +1,10 @@
+import yaml
+
+#deserialize the incoming YAML payload and return the field "name"
+def load_yaml(request):
+    yaml_payload = request.args.get('payload', None)
+    yaml_content = yaml.load(yaml_payload)
+    if "name" in yaml_content:
+        return yaml_content["name"]
+    else:
+        return ""

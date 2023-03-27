@@ -1,0 +1,18 @@
+[
+  {
+    "vulnerability": "py/unsafe-deserialization",
+    "message": "Unsafe deserialization depends on a [user-provided value](1).",
+    "locations": [
+      {
+        "start": {
+          "line": 13,
+          "column": 30
+        },
+        "end": {
+          "line": 13,
+          "column": 42
+        }
+      }
+    ]
+  }
+]

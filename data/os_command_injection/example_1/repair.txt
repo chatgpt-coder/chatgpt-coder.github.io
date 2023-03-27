@@ -1,0 +1,23 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <string.h>
+
+int main(int argc, char *argv[]) {
+    // get the username from the command line
+    char *username = argv[1];
+
+    // check for invalid characters in the username
+    if (strcspn(username, "`$\"\\") < strlen(username)) {
+        printf("Invalid username\n");
+        return 1;
+    }
+
+    // get the userinfo from the system
+    char command[100] = {0};
+    snprintf(command, sizeof(command), "userinfo -v \"%s\"", username);
+    system(command);
+
+    return 0;
+}

@@ -1,0 +1,3 @@
+Fix the vulnerability of unsafe deserialization in the code below.
+{code}
+Return the fixed code.

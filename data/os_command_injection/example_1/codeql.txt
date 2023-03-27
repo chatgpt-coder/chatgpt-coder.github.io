@@ -1,0 +1,18 @@
+[
+  {
+    "vulnerability": "cpp/command-line-injection",
+    "message": "This argument to an OS command is derived from [user input (a command-line argument)](1), dangerously concatenated into [sprintf output argument](2), and then passed to system(__command).",
+    "locations": [
+      {
+        "start": {
+          "line": 14,
+          "column": 12
+        },
+        "end": {
+          "line": 14,
+          "column": 19
+        }
+      }
+    ]
+  }
+]
